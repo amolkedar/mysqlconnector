@@ -15,16 +15,18 @@ $dataColumns = array_keys($incomingData);
 $dbObject = new DB_Object();
 
 $tableExists =  $dbObject->table_exists($tableName);
-print_r($tableExists);
-echo "\n";;
+//print_r($tableExists);
+//echo " " . "\n";
 //echo "printing table exists" . json_encode($tableExists);
 
 if (empty($tableExists)) {
-	echo "table does not exists" ;
-	$dbObject->create($tableName, $incomingData);	
+	echo "table does not exists";
+	echo "\n";
+	$dbObject->create($tableName, $incomingData);		
 } else {
 	echo "Table exists";
-	$dbObject->insert($tableName, $incomingData);	
+		echo "\n";
+	$dbObject->save($tableName, $incomingData);	
 }
 
 
