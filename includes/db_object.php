@@ -109,10 +109,11 @@ Class Db_object {
 	public function save($db_table, $db_table_fields) {
 
 		$columns_to_be_added = static::find_if_column_exists($db_table, $db_table_fields);
-		if (!empty($columns_to_be_added)) {
+
+		if (count($columns_to_be_added) > 0) {
 			$this->alter($db_table, $columns_to_be_added);
 	  	    // Check the condition to decide if its update or insert
-			if (!empty($this->find_if_row_exists($db_table, $db_table_fields))) {
+			if (count($this->find_if_row_exists($db_table, $db_table_fields)) > 0) {
 				echo " alter and then update";
 				return $this->update($db_table, $db_table_fields);								
 			} else {
@@ -120,7 +121,7 @@ Class Db_object {
 				return $this->insert($db_table, $db_table_fields);			
 			}		
 		} else {
-			if (!empty($this->find_if_row_exists($db_table, $db_table_fields))) {
+			if (count($this->find_if_row_exists($db_table, $db_table_fields)) > 0) {
 				echo " in update";
 				return $this->update($db_table, $db_table_fields);								
 			} else {
