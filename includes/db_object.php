@@ -111,18 +111,23 @@ Class Db_object {
 		$columns_to_be_added = static::find_if_column_exists($db_table, $db_table_fields);
 		if (!empty($columns_to_be_added)) {
 			$this->alter($db_table, $columns_to_be_added);
-		}
-
-
-	// Check the condition to decide if its update or insert
-		if (!empty($this->find_if_row_exists($db_table, $db_table_fields))) {
-			echo " in update";
-			return $this->update($db_table, $db_table_fields);								
+	  	    // Check the condition to decide if its update or insert
+			if (!empty($this->find_if_row_exists($db_table, $db_table_fields))) {
+				echo " alter and then update";
+				return $this->update($db_table, $db_table_fields);								
+			} else {
+				echo " alter and then insert";
+				return $this->insert($db_table, $db_table_fields);			
+			}		
 		} else {
-			echo " in insert";
-			return $this->insert($db_table, $db_table_fields);			
+			if (!empty($this->find_if_row_exists($db_table, $db_table_fields))) {
+				echo " in update";
+				return $this->update($db_table, $db_table_fields);								
+			} else {
+				echo " in insert";
+				return $this->insert($db_table, $db_table_fields);			
+			}
 		}
-
 	}
 
 
@@ -131,7 +136,6 @@ Class Db_object {
 		
 		$properties = $this->clean_properties($db_table_fields);
 
-
 		$sql = "INSERT INTO " .$db_table . "(" . implode(',', array_keys($properties)) . ")";
 		$sql .= "VALUES ('";
 		$sql .= implode("','", array_values($properties));
@@ -139,10 +143,8 @@ Class Db_object {
 
 		// echo 'SQL is ' .$sql .'\n';
 		if ($database->query($sql)) {
-			$this->id = $database->insert_id();
-			
+			$this->id = $database->insert_id();			
 			return true;
-
 		} else  {
 			return false;
 		}
@@ -193,20 +195,19 @@ Class Db_object {
 
 	public function alter($db_table, $columns_to_be_added) {
 		global $database;
-		
 		$properties = $this->clean_properties($columns_to_be_added);		
-
+		$sql = "ALTER TABLE ". $db_table;
 		foreach ($columns_to_be_added as $key => $value) {
-
-			$sql = "ALTER TABLE ". $db_table. " ADD " . $value . " text";
+			$sql .=  " ADD " . $value . " text,";
 		}
-
+		$sql = substr_replace($sql,"",-1);
+		$sql .= "";
+		echo 'ALTER SQL is ' .$sql . "\n";
 		if ($database->query($sql)) {								
 			return true;
 		} else  {
 			return false;
 		}
-
 
 	} // alter method
 
