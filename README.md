@@ -13,4 +13,6 @@ It current works for single level parent form only
 1. setup a webserver and install this folder
 2. setup the correct mysql configurations in the includes/config file
 3. setup the endpoint in your iform http POST section
+	3.a In the end point please include the query parameter "tablename", this helps us understand the table name to insert data into
+		e.g http://localhost/webserverice/dataReceive.php?tablename=my_current_table
 4. test all the conditions before deploying it on production forms.
